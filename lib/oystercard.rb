@@ -4,6 +4,7 @@ class Oystercard
   attr_accessor :in_journey
 
   MAX_BALANCE = 90
+  MIN_FARE = 1
 
   def initialize(balance=0)
     @balance = balance
@@ -24,6 +25,7 @@ class Oystercard
   end
 
   def touch_in
+    sufficient_funds?
     @in_journey = true
   end
 
@@ -38,6 +40,11 @@ class Oystercard
   def exceed?(balance)
     error_message = "You have exceeded #{MAX_BALANCE}!"
     fail error_message if balance > MAX_BALANCE
+  end
+
+  def sufficient_funds?
+    error_message = "You do not have enough funds for this journey."
+    fail error_message if @balance < MIN_FARE
   end
 
 

@@ -4,6 +4,8 @@ describe Oystercard do
 
   subject(:oystercard) {described_class.new }
   max_balance = Oystercard::MAX_BALANCE
+  min_fare = Oystercard::MIN_FARE
+
 
   describe 'initialization' do
     it 'is created with a balance of zero by default' do
@@ -56,13 +58,19 @@ end
 
     context '#touch_in' do
       it 'it changes card status to touched in' do
+        subject.top_up(10)
         subject.touch_in
         expect(subject.in_journey?).to eq true
+      end
+      it 'raises an error if card has insufficient funds' do
+        error_message = "You do not have enough funds for this journey."
+        expect { subject.touch_in }.to raise_error error_message
       end
     end
 
     context '#touch_out' do
       it 'it changes card status to touched out' do
+        subject.top_up(10)
         subject.touch_in
         subject.touch_out
         expect(subject.in_journey?).to eq false
