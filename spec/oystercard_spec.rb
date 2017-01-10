@@ -50,9 +50,28 @@ end
 
     context '#in_journey' do
       it 'can return the status of the card' do
-        expect(subject.in_journey).to eq(false)
+        expect(subject.in_journey?).to eq false
       end
     end
+
+    context '#touch_in' do
+      it 'it changes card status to touched in' do
+        subject.touch_in
+        expect(subject.in_journey?).to eq true
+      end
+    end
+
+    context '#touch_out' do
+      it 'it changes card status to touched out' do
+        subject.touch_in
+        subject.touch_out
+        expect(subject.in_journey?).to eq false
+      end
+    end
+
+
+
+
 
 
 
