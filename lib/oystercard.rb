@@ -8,13 +8,18 @@ class Oystercard
   end
 
   def top_up(amount)
-    fail "You have exceeded #{MAX_BALANCE}!" if exceed?(@balance + amount)
+    exceed?(@balance + amount)
     @balance += amount
   end
+
+
 
   private
 
   def exceed?(balance)
-    true if balance > MAX_BALANCE
+    error_message = "You have exceeded #{MAX_BALANCE}!"
+    fail error_message if balance > MAX_BALANCE
   end
+
+
 end
