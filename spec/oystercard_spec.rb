@@ -31,7 +31,7 @@ describe Oystercard do
 
     it 'raises an error if the maximum balance is exceeded' do
       subject.top_up max_balance
-      expect{ subject.top_up 1 }.to raise_error "You have exceeded #{max_balance}!"
+      expect { subject.top_up 1 }.to raise_error "You have exceeded #{max_balance}!"
     end
 
     it 'raises an error when the balance exceeds the max limit' do
@@ -39,15 +39,21 @@ describe Oystercard do
       expect { subject.top_up(91) }.to raise_error message
       expect(subject.balance).to eq (0)
     end
+end
 
-    context 'Deduct moneys from balance' do
+    context '#deduct' do
       it 'can deduct money from balance' do
         subject.top_up(10)
-        subject.deduct(5)
-        expect(subject.balance).to eq (5)
+        expect {subject.deduct 3}.to change {subject.balance}.by -3
       end
     end
 
-  end
+    context '#in_journey' do
+      it 'can return the status of the card' do
+        expect(subject.in_journey).to eq(false)
+      end
+    end
+
+
 
 end
