@@ -1,7 +1,12 @@
 require 'oystercard'
 
 describe Oystercard do
-  subject(:oystercard) (described_class.new)
+
+  subject(:oystercard) {described_class.new}
+  max_balance = Oystercard::MAX_BALANCE
+
+
+
   describe 'initialization' do
     it 'is created with a balance of zero by default' do
       expect(oystercard.balance).to eq(0)
@@ -21,20 +26,17 @@ describe Oystercard do
     end
 
     it 'raises an error if the balance exceeds the max limit' do
-      max_balance = described_class::MAX_BALANCE
       message = "You have exceeded #{max_balance}!"
       subject.top_up(max_balance)
       expect { subject.top_up(1) }.to raise_error message
     end
 
     it 'raises an error if the maximum balance is exceeded' do
-      max_balance = described_class::MAX_BALANCE
       subject.top_up max_balance
       expect{ subject.top_up 1 }.to raise_error "You have exceeded #{max_balance}!"
     end
 
     it 'raises an error when the balance exceeds the max limit' do
-      max_balance = described_class::MAX_BALANCE
       message = "You have exceeded #{max_balance}!"
       expect { subject.top_up(91) }.to raise_error message
       expect(subject.balance).to eq (0)
