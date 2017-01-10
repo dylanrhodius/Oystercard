@@ -43,13 +43,6 @@ describe Oystercard do
     end
 end
 
-    context '#deduct' do
-      it 'can deduct money from balance' do
-        subject.top_up(10)
-        expect {subject.deduct 3}.to change {subject.balance}.by -3
-      end
-    end
-
     context '#in_journey' do
       it 'can return the status of the card' do
         expect(subject.in_journey?).to eq false
@@ -75,7 +68,15 @@ end
         subject.touch_out
         expect(subject.in_journey?).to eq false
       end
+
+      it 'it toches out and deducts fare' do
+        subject.top_up(10)
+        subject.touch_in
+        expect { subject.touch_out }.to change {subject.balance}.by (-min_fare)
+      end
     end
+
+
 
 
 
