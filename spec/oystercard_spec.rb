@@ -1,10 +1,11 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
 
   subject(:oystercard) {described_class.new }
   max_balance = Oystercard::MAX_BALANCE
-  min_fare = Oystercard::MIN_FARE
+  min_fare = Journey::MIN_FARE
 
 
   describe 'initialization' do
@@ -43,18 +44,12 @@ describe Oystercard do
     end
 end
 
-    context '#in_journey' do
-      it 'can return the status of the card' do
-        expect(subject.in_journey?).to eq false
-      end
-    end
 
     context '#touch_in' do
       let(:station) {double :station}
       it 'it changes card status to touched in' do
         subject.top_up(10)
-        subject.touch_in(station)
-        expect(subject.in_journey?).to eq true
+        expect(subject.touch_in(station)).to eq station
       end
       it 'raises an error if card has insufficient funds' do
         error_message = "You do not have enough funds for this journey."
@@ -73,38 +68,37 @@ end
         subject.top_up(10)
       end
 
-      it 'it changes card status to touched out' do
+      it 'changes card status to touched out' do
         subject.touch_in(entry_station)
-        subject.touch_out(exit_station)
-        expect(subject.in_journey?).to eq false
+        expect(subject.touch_out(exit_station)).to eq nil
       end
 
-      it 'it touches out and deducts fare' do
+      it 'touches out and deducts fare' do
         subject.touch_in(entry_station)
         expect { subject.touch_out(exit_station) }.to change {subject.balance}.by -min_fare
       end
 
     end
 
-    context '#journey_history' do
+    context '#journeys' do
 
       let(:entry_station) {double :station}
       let(:exit_station) {double :station}
       let(:journey) { {entry_station: entry_station, exit_station: exit_station} }
 
       it 'has an empty list of journeys by default' do
-        expect(subject.journey_history).to be_empty
+        expect(subject.journeys).to be_empty
       end
 
       it 'it changes card status to touched in' do
-        expect(subject.journey_history).to eq []
+        expect(subject.journeys).to eq []
       end
 
-      it 'it records a journey to journey_history' do
+      it 'it records a journey to journeys' do
         subject.top_up(10)
         subject.touch_in(entry_station)
         subject.touch_out(exit_station)
-        expect(subject.journey_history).to include journey
+        expect(subject.journeys).to include { {start: entry_station, end: exit_station} }
       end
 
     end

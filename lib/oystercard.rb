@@ -1,51 +1,63 @@
+require_relative 'journey'
+
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journey_history
+  attr_reader :balance, :entry_station, :journeys, :journey
 
   MAX_BALANCE = 90
-  MIN_FARE = 1
 
   def initialize(balance=0)
+    @journey = Journey.new
     @balance = balance
-    @journey_history = []
+    @journeys = []
   end
 
   def top_up(amount)
-    exceed? (@balance + amount)
-    @balance += amount
-  end
-
-  def in_journey?
-    !!entry_station
+    raise exceeds_limit_message if exceeds_limit?(amount)
+    update_balance(amount)
   end
 
   def touch_in(station)
-    sufficient_funds?
-    @entry_station = station
+    raise insufficient_funds_message if insufficient_funds?
+    # TODO finalise_journey unless journey.complete?
+    journey.start(station)
   end
 
   def touch_out(station)
-    deduct(MIN_FARE)
-    @journey_history << {entry_station: @entry_station, exit_station: station}
-    @entry_station = nil
+    journey.end(station)
+    finalise_journey
   end
-
-
 
   private
 
-  def exceed?(balance)
-    error_message = "You have exceeded #{MAX_BALANCE}!"
-    fail error_message if balance > MAX_BALANCE
+  def finalise_journey
+    update_balance(-journey.fare)
+    record_journey
   end
 
-  def sufficient_funds?
-    error_message = "You do not have enough funds for this journey."
-    fail error_message if @balance < MIN_FARE
+  def update_balance(amount)
+    @balance += amount
   end
 
-  def deduct(amount)
-    @balance -= amount
+  def record_journey
+    @journeys << journey.record
+    journey.reset
+  end
+
+  def insufficient_funds_message
+    "You do not have enough funds for this journey."
+  end
+
+  def exceeds_limit_message
+    "You have exceeded #{MAX_BALANCE}!"
+  end
+
+  def exceeds_limit?(amount)
+    balance + amount > MAX_BALANCE
+  end
+
+  def insufficient_funds?
+    @balance < Journey::MIN_FARE
   end
 
 end
