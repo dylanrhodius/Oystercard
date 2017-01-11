@@ -31,6 +31,7 @@ class Oystercard
     @journey_history << {entry_station: @entry_station, exit_station: station}
     @entry_station = nil
     @exit_station = nil
+    balance
   end
 
 
