@@ -17,20 +17,10 @@ class Journey
     complete? ? MIN_FARE : PENALTY_FARE
   end
 
+  #private
+
   def complete?
     !entry_station.nil? && !exit_station.nil?
   end
-
-  def reset
-    @entry_station = nil
-    @exit_station = nil
-  end
-
-  def record
-    @entry_station = "N/A" if @entry_station.nil?
-    {start: @entry_station, end: @exit_station}
-  end
-
-
 
 end

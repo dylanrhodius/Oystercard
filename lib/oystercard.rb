@@ -1,4 +1,5 @@
 require_relative 'journey'
+require_relative 'journey_log'
 
 class Oystercard
 
@@ -7,9 +8,8 @@ class Oystercard
   MAX_BALANCE = 90
 
   def initialize(balance=0)
-    @journey = Journey.new
     @balance = balance
-    @journeys = []
+    @journeys = JourneyLog.new
   end
 
   def top_up(amount)
@@ -19,28 +19,19 @@ class Oystercard
 
   def touch_in(station)
     raise insufficient_funds_message if insufficient_funds?
-    journey.start(station)
+    @journeys.start(station)
   end
 
   def touch_out(station)
-    journey.end(station)
-    finalise_journey
+    @journeys.end(station)
+    update_balance(-@journeys.journey.fare)
+    @journeys.reset
   end
 
   private
 
-  def finalise_journey
-    update_balance(-journey.fare)
-    record_journey
-  end
-
   def update_balance(amount)
     @balance += amount
-  end
-
-  def record_journey
-    @journeys << journey.record
-    journey.reset
   end
 
   def insufficient_funds_message

@@ -46,7 +46,7 @@ end
 
 
     context '#touch_in' do
-      let(:station) {double :station}
+      let(:station) { double :station }
       it 'it changes card status to touched in' do
         subject.top_up(10)
         expect(subject.touch_in(station)).to eq station
@@ -68,40 +68,11 @@ end
         subject.top_up(10)
       end
 
-      it 'changes card status to touched out' do
-        subject.touch_in(entry_station)
-        expect(subject.touch_out(exit_station)).to eq nil
-      end
-
       it 'touches out and deducts fare' do
         subject.touch_in(entry_station)
         expect { subject.touch_out(exit_station) }.to change {subject.balance}.by -min_fare
       end
 
     end
-
-    context '#journeys' do
-
-      let(:entry_station) {double :station}
-      let(:exit_station) {double :station}
-      let(:journey) { {entry_station: entry_station, exit_station: exit_station} }
-
-      it 'has an empty list of journeys by default' do
-        expect(subject.journeys).to be_empty
-      end
-
-      it 'it changes card status to touched in' do
-        expect(subject.journeys).to eq []
-      end
-
-      it 'it records a journey to journeys' do
-        subject.top_up(10)
-        subject.touch_in(entry_station)
-        subject.touch_out(exit_station)
-        expect(subject.journeys).to include { {start: entry_station, end: exit_station} }
-      end
-
-    end
-
 
 end
