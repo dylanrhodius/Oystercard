@@ -3,7 +3,7 @@ require 'journey'
 
 describe Oystercard do
 
-  subject(:oystercard) {described_class.new }
+  subject(:oystercard) { described_class.new }
   max_balance = Oystercard::MAX_BALANCE
   min_fare = Journey::MIN_FARE
 
