@@ -18,9 +18,9 @@ describe Journey do
 
   describe '#fare' do
     it 'calculates fare for complete journey' do
-      subject.start("Bank")
-      subject.end("Aldgate")
-      expect(subject.fare).to eq Journey::MIN_FARE
+      subject.start("bank")
+      subject.end("angel")
+      expect(subject.fare).to eq 2
     end
     it 'charges penalty if no entry station' do
       subject.end("Aldgate")

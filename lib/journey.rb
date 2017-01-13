@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class Journey
 
   MIN_FARE = 1
@@ -14,13 +16,20 @@ class Journey
   end
 
   def fare
-    complete? ? MIN_FARE : PENALTY_FARE
+    complete? ? calculate_fare : PENALTY_FARE
   end
 
-  #private
-
   def complete?
-    !entry_station.nil? && !exit_station.nil?
+    !@entry_station.nil? && !@exit_station.nil?
+  end
+
+  private
+
+  def calculate_fare
+    return PENALTY_FARE if @exit_station == "N/A"
+    entry_s = Station.new @entry_station
+    exit_s = Station.new @exit_station
+    (entry_s.zone - exit_s.zone).abs + 1
   end
 
 end

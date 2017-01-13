@@ -69,8 +69,8 @@ end
       end
 
       it 'touches out and deducts fare' do
-        subject.touch_in(entry_station)
-        expect { subject.touch_out(exit_station) }.to change {subject.balance}.by -min_fare
+        subject.touch_in('bank')
+        expect { subject.touch_out('angel') }.to change {subject.balance}.by -2
       end
 
     end

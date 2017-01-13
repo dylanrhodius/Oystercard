@@ -19,7 +19,14 @@ class Oystercard
 
   def touch_in(station)
     raise insufficient_funds_message if insufficient_funds?
-    @journeys.start(station)
+    if !!@journeys.journey.entry_station
+      @journeys.end("N/A")
+      p "#{@journeys.journey}"
+      update_balance(-@journeys.journey.fare)
+    else
+      @journeys.start(station)
+    end
+
   end
 
   def touch_out(station)
