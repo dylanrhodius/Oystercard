@@ -19,7 +19,7 @@ class Oystercard
 
   def touch_in(station)
     raise insufficient_funds_message if insufficient_funds?
-    # TODO finalise_journey unless journey.complete?
+    penalty_journey if journey.entry_station
     journey.start(station)
   end
 
@@ -29,6 +29,12 @@ class Oystercard
   end
 
   private
+
+  def penalty_journey
+    update_balance(-journey.fare)
+    journey.end("N/A")
+    record_journey
+  end
 
   def finalise_journey
     update_balance(-journey.fare)
