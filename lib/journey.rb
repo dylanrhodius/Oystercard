@@ -27,8 +27,8 @@ class Journey
   end
 
   def record
-    entry_station = "N/A" if entry_station.nil?
-    {start: entry_station, end: exit_station}
+    @entry_station = "N/A" if @entry_station.nil?
+    {start: @entry_station, end: @exit_station}
   end
 
 
